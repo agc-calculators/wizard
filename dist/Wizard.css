@@ -1,3 +1,6 @@
+.wizard {
+    max-width: var(--wiz-max-width, 100%);
+}
 .wizard .wizard__step {
     display: none;
 }
@@ -8,13 +11,21 @@
     display: var(--wiz-field-label-display, block);
     margin: var(--wiz-field-label-margin, 0 0 4px 0);
 }
+.wizard .wizard__step .wizard__field-hint {
+    margin: var(--wiz-field-hint-margin, 0);
+    padding: var(--wiz-field-hint-padding, 0);
+}
+
 .wizard .wizard__validation-message {
     color: var(--wiz-validation-message-color, red);
+    background-color: var(--wiz-validation-message-background-color, transparent);
     padding: var(--wiz-validation-message-padding, 4px 0);
 }
 .wizard .wizard__actions {
     overflow: auto;
+    margin: var(--wiz-actions-margin, 0);
     padding: var(--wiz-actions-padding, 10px 0);
+    background-color: var(--wiz-actions-background-color, transparent);
 }
 .wizard .wizard__actions #wizNextBtn {
     float: var(--wiz-next-btn-float, right);

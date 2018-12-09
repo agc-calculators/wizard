@@ -31,6 +31,7 @@ const maybeFactory = (factory, component) => {
 const Field = ({
   name,
   label,
+  hint,
   className,
   component,
   value,
@@ -66,7 +67,9 @@ const Field = ({
   onChange,
   min,
   max
-}), React.createElement("div", {
+}), hint && React.createElement("p", {
+  className: "wizard__field-hint"
+}, hint), React.createElement("div", {
   className: "wizard__validation-message"
 }));
 
@@ -74,13 +77,16 @@ const FormSection = ({
   name,
   className,
   caption,
+  description,
   children
 }) => React.createElement("div", {
   className: className,
   id: `formSection_${name}`
 }, caption && React.createElement("h3", {
   className: `${className}-title`
-}, caption), children);
+}, caption), description && React.createElement("p", {
+  className: `${className}-description`
+}, description), children);
 
 class Wizard extends Component {
   constructor(props) {
@@ -125,6 +131,7 @@ class Wizard extends Component {
       }
 
       this.props.onValidated && this.props.onValidated(true);
+      this.props.onStepChanged && this.props.onStepChanged(index);
       this.props.onSubmit && this.props.onSubmit(serialize(this.rootEl.querySelector('form'))); // setTimeout(() => {
       //     this.rootEl.querySelector('form').submit()
       // }, 0)            
@@ -165,6 +172,7 @@ class Wizard extends Component {
       currentIndex: index,
       canSubmit: index >= steps.length - 1
     });
+    this.props.onStepChanged && this.props.onStepChanged(index);
   }
 
   prevStep(e) {
@@ -229,12 +237,14 @@ class Wizard extends Component {
       key: section.name,
       className: "wizard__step-section",
       name: section.name,
-      caption: this.translate(`sections.${section.name}.caption`) || section.caption
+      caption: this.translate(`sections.${section.name}.caption`) || section.caption,
+      description: this.translate(`sections.${section.name}.description`) || section.description
     }, section.fields.map(f => React.createElement(Field, {
       className: "wizard__field",
       key: f.name,
       name: f.name,
       label: this.translate(`labels.${f.name}`) || f.label,
+      hint: this.translate(`hints.${f.name}`) || f.hint,
       required: (section.required || []).indexOf(f.name) !== -1,
       validate: f.validate,
       validity: f.validity,
@@ -361,6 +371,9 @@ class Wizard extends Component {
     this.setState({
       cache: cache
     });
+    this.props.onReady && this.props.onReady({
+      steps: steps && steps.length || 0
+    });
   }
 
 }
@@ -383,7 +396,9 @@ _defineProperty(Wizard, "propTypes", {
   }).isRequired,
   componentFactory: PropTypes.func,
   onSubmit: PropTypes.func,
+  onStepChanged: PropTypes.func,
   onValidated: PropTypes.func,
+  onReady: PropTypes.func,
   i18n: PropTypes.shape()
 });
 

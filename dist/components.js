@@ -5,9 +5,10 @@ export const Input = ({
   name,
   defaultValue,
   onChange,
+  type,
   ...props
 }) => React.createElement("input", _extends({
-  type: "text",
+  type: type || 'text',
   name: name,
   defaultValue: defaultValue,
   onChange: e => onChange && onChange(e.target.value)
