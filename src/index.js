@@ -8,13 +8,14 @@ const config = {
     steps: [
         {
             name: 'step1', 
-            title: '① Getting Aquainted',
+            title: '① Getting Aquainted',            
             sections: [
                 { 
                     name: 'personal', 
                     caption: 'Personal Details',
+                    description: 'Tell us a little bit about yourself!',
                     fields: [
-                        { name: 'firstname', label: 'Firstname', component: 'input', validity: 'required' },
+                        { name: 'firstname', label: 'Firstname', component: 'input', validity: 'required', hint: 'Enter your firstname' },
                         { name: 'lastname', label: 'Lastname', component: 'input', validity: 'required' }
                     ],
                     required: ['firstname', 'lastname']

@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const Input = ({name, defaultValue, onChange, ...props}) => (<input type="text" name={name} defaultValue={defaultValue} onChange={(e) => onChange && onChange(e.target.value)} {...props} />)
+export const Input = ({name, defaultValue, onChange, type, ...props}) => (<input type={type || 'text'} name={name} defaultValue={defaultValue} onChange={(e) => onChange && onChange(e.target.value)} {...props} />)
 
 export const Number = ({name, defaultValue, onChange, ...props}) => (<input type="number" name={name} defaultValue={defaultValue} onChange={(e) => onChange && onChange(e.target.value)} {...props} />)
 

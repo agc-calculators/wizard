@@ -29,17 +29,19 @@ const maybeFactory = (factory, component) => {
   return comp
 }
 
-const Field = ({name, label, className, component, value, defaultValue, defaultChecked, selected, options, onChange, required, validate, validity, onBlur, min, max}) => 
+const Field = ({name, label, hint, className, component, value, defaultValue, defaultChecked, selected, options, onChange, required, validate, validity, onBlur, min, max}) => 
     (<div className={className} data-field={name} data-validate={validate ? true : (required ? true : false)} data-pattern={validate} data-validity={validity} data-required={required} onBlur={onBlur}>
         {!component.label && label && (<label htmlFor={name}>{label}</label>)}
         {component.label && component.label(label)}
         {component && component({name, label, value, defaultValue, selected, defaultChecked, options, onChange, min, max})}
-        <div className="wizard__validation-message"></div>       
+        {hint && <p className="wizard__field-hint">{hint}</p>} 
+        <div className="wizard__validation-message"></div>      
     </div>)
 
-const FormSection = ({name, className, caption, children}) => (
+const FormSection = ({name, className, caption, description, children}) => (
     <div className={className} id={`formSection_${name}`}>
             {caption && (<h3 className={`${className}-title`}>{caption}</h3>)}
+            {description && (<p className={`${className}-description`}>{description}</p>)}
             {children}
     </div>
 )
@@ -79,7 +81,9 @@ class Wizard extends Component {
         }).isRequired,
         componentFactory: PropTypes.func,
         onSubmit: PropTypes.func,
+        onStepChanged: PropTypes.func,
         onValidated: PropTypes.func,
+        onReady: PropTypes.func,
         i18n: PropTypes.shape()     
     }
 
@@ -103,6 +107,7 @@ class Wizard extends Component {
             }
 
             this.props.onValidated && this.props.onValidated(true)
+            this.props.onStepChanged && this.props.onStepChanged(index)
             this.props.onSubmit && this.props.onSubmit(serialize(this.rootEl.querySelector('form')))
             // setTimeout(() => {
             //     this.rootEl.querySelector('form').submit()
@@ -142,6 +147,7 @@ class Wizard extends Component {
         }
 
         this.setState({currentIndex: index, canSubmit: index >= (steps.length - 1)})
+        this.props.onStepChanged && this.props.onStepChanged(index)
     }
 
     prevStep(e) {
@@ -187,12 +193,15 @@ class Wizard extends Component {
                     <div className="wizard__step" key={step.name} data-step-index={idx}>
                         {step.title && <h3 className="wizard__step-title">{this.translate(`steps.${step.name}.title`) || step.title}</h3>}
                         {step.sections.map(section => (
-                            <FormSection key={section.name} className="wizard__step-section" name={section.name} caption={this.translate(`sections.${section.name}.caption`) || section.caption}>
+                            <FormSection key={section.name} className="wizard__step-section" name={section.name} 
+                                 caption={this.translate(`sections.${section.name}.caption`) || section.caption}
+                                 description={this.translate(`sections.${section.name}.description`) || section.description}>
                                 {section.fields.map(f => (
                                     <Field className="wizard__field" 
                                         key={f.name} 
                                         name={f.name} 
                                         label={this.translate(`labels.${f.name}`) || f.label} 
+                                        hint={this.translate(`hints.${f.name}`) || f.hint}
                                         required={(section.required || []).indexOf(f.name) !== -1} 
                                         validate={f.validate} 
                                         validity={f.validity} 
@@ -315,6 +324,7 @@ class Wizard extends Component {
             cache[target] = { regex: regex, el: el, message: message, required: !!v.dataset['required'] }
         })
         this.setState({cache: cache})
+        this.props.onReady && this.props.onReady({steps: steps && steps.length || 0})
     }
 }
 
