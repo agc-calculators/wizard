@@ -1,0 +1,45 @@
+.wizard .wizard__step {
+    display: none;
+}
+.wizard .wizard__step-section h3 {
+    margin: var(--wiz-step-section-header-margin, 0 0 10px 0);
+}
+.wizard .wizard__step .wizard__field label {
+    display: var(--wiz-field-label-display, block);
+    margin: var(--wiz-field-label-margin, 0 0 4px 0);
+}
+.wizard .wizard__validation-message {
+    color: var(--wiz-validation-message-color, red);
+    padding: var(--wiz-validation-message-padding, 4px 0);
+}
+.wizard .wizard__actions {
+    overflow: auto;
+    padding: var(--wiz-actions-padding, 10px 0);
+}
+.wizard .wizard__actions #wizNextBtn {
+    float: var(--wiz-next-btn-float, right);
+}
+.wizard .wizard__actions #wizPrevBtn {
+    float: var(--wiz-prev-btn-float, none);
+}
+.wizard .wizard__progress {
+    display: var(--wiz-progress-display, block);
+    text-align: var(--wiz-progress-text-align, center);
+    margin: var(--wiz-progress-margin, 10px 0 0 0);
+}
+.wizard .wizard__progress span {
+    height: var(--wiz-progress-dot-height, 15px);
+    width: var(--wiz-progress-dot-width, 15px);
+    margin: var(--wiz-progress-dot-margin, 0 2px);
+    background-color: var(--wiz-progress-dot-background-color, #bbbbbb);
+    border: var(--wiz-progress-dot-border, none);  
+    border-radius: var(--wiz-progress-dot-border-radius, 50%);
+    display: var(--wiz-progress-dot-display, inline-block);
+    opacity: var(--wiz-progress-dot-opacity, 0.5);
+}
+.wizard .wizard__progress span.active {
+    opacity: var(--wiz-progress-dot-active-opacity, 1);
+}
+.wizard .wizard__progress span.finish {
+    background-color: var(--wiz-progress-dot-finish-background-color, #4CAF50);
+}
