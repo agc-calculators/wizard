@@ -62,9 +62,12 @@ const config = {
     }    
 }
 const i18n = {
-    'actions.next': 'Continue ⟶',
-    'actions.finish': 'Complete ⟶',
-    'actions.previous': '⟵ Go Back',
+    'actions.next.icon': '⟶',
+    'actions.next': 'Continue',
+    'actions.finish.icon': '⟶',
+    'actions.finish': 'Complete',
+    'actions.previous.icon': '⟵',
+    'actions.previous': 'Go Back',
     'labels.firstname': 'Firstname *',
     'labels.lastname': 'Lastname *'
 }

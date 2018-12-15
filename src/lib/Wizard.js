@@ -132,7 +132,7 @@ class Wizard extends Component {
         }
 
         if (index === (steps.length - 1)) {
-            this.rootEl.querySelector("#wizNextBtn").innerHTML = this.translate('actions.submit') || "Submit";
+            this.rootEl.querySelector("#wizNextBtn").innerHTML = `<span>${this.translate('actions.submit') || "Submit"}</span>` ;
         } else {
             this.rootEl.querySelector("#wizNextBtn").innerHTML = this.translate('actions.next') || "Next";
         }
@@ -216,9 +216,9 @@ class Wizard extends Component {
                             </FormSection>
                         ))}
                     </div>))}
-                    <div className="wizard__actions">
-                        <button type="button" id="wizPrevBtn" onClick={this.prevStep}>{this.translate('actions.previous') || 'Previous'}</button>
-                        <button type="button" id="wizNextBtn" onClick={this.nextStep}>{this.translate(this.state.canSubmit ? 'actions.finish' : 'actions.next') || 'Next'}</button>
+                    <div className="wizard__actions">                        
+                        <button type="button" id="wizNextBtn" onClick={this.nextStep} title={this.translate(this.state.canSubmit ? 'actions.finish' : 'actions.next') || 'Next'}>{this.translate(this.state.canSubmit ? 'actions.finish' : 'actions.next') || 'Next'} <span className="wizard__actions-icon">{this.translate(this.state.canSubmit ? 'actions.finish.icon' : 'actions.next.icon') || '⟶'}</span></button>
+                        <button type="button" id="wizPrevBtn" onClick={this.prevStep} title={this.translate('actions.previous') || 'Previous'}><span className="wizard__actions-icon">{this.translate('actions.previous.icon') || '⟵'}</span> {this.translate('actions.previous') || 'Previous'}</button>
                     </div>
                     <div className="wizard__progress">
                         {steps.map( (s, index) => (
