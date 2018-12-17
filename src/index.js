@@ -20,11 +20,12 @@ const config = {
                     ],
                     required: ['firstname', 'lastname']
                 },
-                { 
+                {
                     name: 'details', 
                     caption: 'Misc Details',
                     fields: [
                         { name: 'age', label: 'Age', component: 'input', validate: '^[0-9]+$', validity: 'pattern' },
+                        { name: 'weight', label: 'Weight (<% this.units.plural %>)', component: 'input', validate: '^[0-9]+$', validity: 'pattern', units: { unit: 'lb', single: 'lb', plural: 'lbs' } },
                         { name: 'gender', label: 'Gender', component: 'select', validity: 'required', options: [ {text: 'Male', value: 'male'}, {text: 'Female', value: 'female'}] },
                         { name: 'income', label: 'Yearly Income', component: 'range', min: 1, max: 500000, defaultValue: 50000}
                     ],
@@ -117,6 +118,7 @@ class App extends Component {
                   <ul style={{textAlign: 'left'}}>
                       <li>Name: {results.firstname} {results.lastname}</li>
                       <li>Gender: {results.gender}</li>
+                      <li>Weight: {results.weight}</li>
                       <li>Age: {results.age}</li>
                       <li>Email: {results.email} ({results.emailType})</li>
                       <li>Yearly Income: ${results.income}</li>

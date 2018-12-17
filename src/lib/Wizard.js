@@ -2,6 +2,8 @@ import React, { Component } from "react"
 import ReactDOM from "react-dom"
 import PropTypes from "prop-types"
 
+import Template from './Template'
+
 import serialize from './serialize'
 
 import "./Wizard.css"
@@ -20,6 +22,7 @@ const stringToComponentMapper = {
     range: Range
 }
 
+
 const maybeFactory = (factory, component) => {
   let comp = factory && factory(component)
   
@@ -29,22 +32,29 @@ const maybeFactory = (factory, component) => {
   return comp
 }
 
-const Field = ({name, label, hint, className, component, value, defaultValue, defaultChecked, selected, options, onChange, required, validate, validity, onBlur, min, max}) => 
-    (<div className={className} data-field={name} data-validate={validate ? true : (required ? true : false)} data-pattern={validate} data-validity={validity} data-required={required} onBlur={onBlur}>
-        {!component.label && label && (<label htmlFor={name}>{label}</label>)}
-        {component.label && component.label(label)}
+const Field = (props) =>  {
+    const {name, label, hint, className, component, value, defaultValue, defaultChecked, selected, options, onChange, required, validate, validity, onBlur, min, max} = props
+    
+    return (<div className={className} data-field={name} data-validate={validate ? true : (required ? true : false)} data-pattern={validate} data-validity={validity} data-required={required} onBlur={onBlur}>
+        {!component.label && label && (<label htmlFor={name} dangerouslySetInnerHTML={{__html: Template(label, props)}}></label>)}
+        {component.label && component.label(label, props)}
         {component && component({name, label, value, defaultValue, selected, defaultChecked, options, onChange, min, max})}
-        {hint && <p className="wizard__field-hint">{hint}</p>} 
+        {hint && <p className="wizard__field-hint" dangerouslySetInnerHTML={{__html: Template(hint, props)}}></p>} 
         <div className="wizard__validation-message"></div>      
     </div>)
+}
+    
 
-const FormSection = ({name, className, caption, description, children}) => (
-    <div className={className} id={`formSection_${name}`}>
-            {caption && (<h3 className={`${className}-title`}>{caption}</h3>)}
-            {description && (<p className={`${className}-description`}>{description}</p>)}
+const FormSection = (props) => {
+    const {name, className, caption, description, children} = props
+    return (
+        <div className={className} id={`formSection_${name}`}>
+            {caption && (<h3 className={`${className}-title`} dangerouslySetInnerHTML={{__html: Template(caption, props)}}></h3>)}
+            {description && (<p className={`${className}-description`} dangerouslySetInnerHTML={{__html: Template(caption, props)}}></p>)}
             {children}
-    </div>
-)
+        </div>
+    )
+}  
 
 class Wizard extends Component {
     constructor(props) {
@@ -194,9 +204,11 @@ class Wizard extends Component {
                         {step.title && <h3 className="wizard__step-title">{this.translate(`steps.${step.name}.title`) || step.title}</h3>}
                         {step.sections.map(section => (
                             <FormSection key={section.name} className="wizard__step-section" name={section.name} 
+                                 section={Object.assign({}, section)}
                                  caption={this.translate(`sections.${section.name}.caption`) || section.caption}
                                  description={this.translate(`sections.${section.name}.description`) || section.description}>
-                                {section.fields.map(f => (
+                                {section.fields.map(f => {
+                                    return (
                                     <Field className="wizard__field" 
                                         key={f.name} 
                                         name={f.name} 
@@ -211,8 +223,10 @@ class Wizard extends Component {
                                         defaultChecked={f.defaultChecked}
                                         min={f.min}
                                         max={f.max}
-                                        onBlur={() => this.validateInput(f.name)} />
-                                ))}
+                                        units={f.units || {}}
+                                        field={Object.assign({}, f)}
+                                        onBlur={() => this.validateInput(f.name)}/>
+                                )})}
                             </FormSection>
                         ))}
                     </div>))}
@@ -324,7 +338,7 @@ class Wizard extends Component {
             cache[target] = { regex: regex, el: el, message: message, required: !!v.dataset['required'] }
         })
         this.setState({cache: cache})
-        this.props.onReady && this.props.onReady({steps: steps && steps.length || 0})
+        this.props.onReady && this.props.onReady({steps: (steps && steps.length) || 0})
     }
 }
 
